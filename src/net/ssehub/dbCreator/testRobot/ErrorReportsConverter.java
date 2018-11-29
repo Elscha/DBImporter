@@ -56,7 +56,7 @@ public class ErrorReportsConverter {
             processHeader(content[0]);
             
             try {
-                Runner.LOGGER.logError("  Add functions.");
+                Runner.LOGGER.logInfo("  Add functions.");
                 for (int i = 1; i < content.length; i++) {
                     // Add all functions, may appear multiple times -> commit each at once
                     String[] row = content[i];
@@ -64,7 +64,7 @@ public class ErrorReportsConverter {
                 }
                 
                 
-                Runner.LOGGER.logError("  Add bugs.");
+                Runner.LOGGER.logInfo("  Add bugs.");
                 for (int i = 1; i < content.length; i++) {
                     // Add all bug reports
                     String[] row = content[i];
@@ -74,7 +74,7 @@ public class ErrorReportsConverter {
                     bugIDs.put(i, id);
                 }
                 
-                Runner.LOGGER.logError("  Process data");
+                Runner.LOGGER.logInfo("  Process data");
                 try {
                     con.setAutoCommit(false);
                 } catch (SQLException e2) {
