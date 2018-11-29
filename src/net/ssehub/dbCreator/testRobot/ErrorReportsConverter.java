@@ -82,10 +82,10 @@ public class ErrorReportsConverter {
                 }
                 for (int i = 1; i < content.length; i++) {
                     if (i % 10 == 1) {
-                        if (i == 11 || i == 111) {
-                            Runner.LOGGER.logError("    Processing " + i + "th data row of " + content.length + " rows.");
+                        if (i % 100 == 11) {
+                            Runner.LOGGER.logInfo("    Processing " + i + "th data row of " + content.length + " rows.");
                         } else {
-                            Runner.LOGGER.logError("    Processing " + i + "st data row of " + content.length + " rows.");
+                            Runner.LOGGER.logInfo("    Processing " + i + "st data row of " + content.length + " rows.");
                         }
                     }
 
@@ -133,7 +133,7 @@ public class ErrorReportsConverter {
                 metricsColumn = column;
                 int nMetrics = row.length - column;
                 metricsNames = new String[nMetrics];
-                Runner.LOGGER.logError("  Header lists " + nMetrics + " metrics.");
+                Runner.LOGGER.logInfo("  Header lists " + nMetrics + " metrics.");
                 
                 // Now, it is the index within the array
                 column = 0;
