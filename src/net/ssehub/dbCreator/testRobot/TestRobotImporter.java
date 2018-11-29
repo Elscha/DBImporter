@@ -10,6 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import net.ssehub.dbCreator.Runner;
 
 public class TestRobotImporter {
+    private static final boolean METRICS_EXIST = true;
     private static final File ERROR_REPORTS_FOLDER = new File("data");
     public static final int MAX_THREADS = 8;
 
@@ -26,14 +27,16 @@ public class TestRobotImporter {
         File[] reports = ERROR_REPORTS_FOLDER.listFiles();
         
         // Process first file to create metric table
-        ErrorReportsConverter reader = new ErrorReportsConverter(true);
-        Runner.LOGGER.logInfo("Processing 1st of " + reports.length + ": " + reports[0].getName());
-        reader.readFile(reports[0]);
-        reader.close();
+        if (!METRICS_EXIST) {
+            ErrorReportsConverter reader = new ErrorReportsConverter(true);
+            Runner.LOGGER.logInfo("Processing 1st of " + reports.length + ": " + reports[0].getName());
+            reader.readFile(reports[0]);
+            reader.close();
+        }
         
         // Convert all others in separate threads
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(MAX_THREADS);
-        for (int i = 1; i < reports.length; i++) {
+        for (int i = METRICS_EXIST ? 0 : 1; i < reports.length; i++) {
             final int fileID = i;
             
             executor.submit(() -> {
