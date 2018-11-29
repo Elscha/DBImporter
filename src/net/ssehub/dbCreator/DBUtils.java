@@ -15,7 +15,7 @@ import java.util.Properties;
 
 public class DBUtils {
     private static final File SETTINGS_FILE = new File("res/db_con.properties");
-    private static final File DB_CREATION_FILE = new File("res/genDB.sql");
+//    private static final File DB_CREATION_FILE = new File("res/genDB.sql");
     
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
     
@@ -48,7 +48,7 @@ public class DBUtils {
         return con;
     }
     
-    public static Timestamp toDate(String date) throws ParseException {
+    public static Timestamp toDate(String date) {
         int pos = date.indexOf(',');
         date = date.substring(pos + 2);
         
@@ -57,44 +57,9 @@ public class DBUtils {
             java.util.Date d = DATE_FORMAT.parse(date);;
             result = new Timestamp(d.getTime());            
         } catch (ParseException e) {
-            // No action needed
+            // No action needed, if not parseable, we commit nothing (is allowed by DB)
         }
         
         return result;
     }
-    
-//    public static boolean createDB(Connection con) throws IOException {
-//        boolean successful = false;
-//        
-//        if (!DB_CREATION_FILE.exists()) {
-//            throw new IOException(DB_CREATION_FILE.getAbsolutePath() + " does not exist");
-//        }
-//        
-//        StringBuffer creationStatements = new StringBuffer();
-//        try (BufferedReader in = new BufferedReader(new FileReader(DB_CREATION_FILE))) {
-//            String line;
-//            while((line = in.readLine()) != null) {
-//                creationStatements.append("\n");
-//                creationStatements.append(line);
-//            }
-//        }
-//        String sql = creationStatements.toString();
-//        System.out.println(sql);
-//        
-//        Statement stmt = null;
-//        try {
-//            stmt = con.createStatement();
-//            stmt.addBatch(creationStatements.toString());
-//            int[] results = stmt.executeBatch();
-//            System.out.println("Result is: " + Arrays.toString(results));
-////            if (result > 0) {
-////                successful = true;
-////            }
-//        } catch (SQLException e) {
-//            throw new IOException(e);
-//        }
-//        
-//        return successful;
-//    }
-
 }

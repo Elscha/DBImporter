@@ -56,7 +56,7 @@ public class ErrorReportsConverter {
             processHeader(content[0]);
             
             try {
-                System.out.println("  Add functions.");
+                Runner.LOGGER.logError("  Add functions.");
                 for (int i = 1; i < content.length; i++) {
                     // Add all functions, may appear multiple times -> commit each at once
                     String[] row = content[i];
@@ -64,7 +64,7 @@ public class ErrorReportsConverter {
                 }
                 
                 
-                System.out.println("  Add bugs.");
+                Runner.LOGGER.logError("  Add bugs.");
                 for (int i = 1; i < content.length; i++) {
                     // Add all bug reports
                     String[] row = content[i];
@@ -74,7 +74,7 @@ public class ErrorReportsConverter {
                     bugIDs.put(i, id);
                 }
                 
-                System.out.println("  Process data");
+                Runner.LOGGER.logError("  Process data");
                 try {
                     con.setAutoCommit(false);
                 } catch (SQLException e2) {
@@ -83,9 +83,9 @@ public class ErrorReportsConverter {
                 for (int i = 1; i < content.length; i++) {
                     if (i % 10 == 1) {
                         if (i == 11 || i == 111) {
-                            System.out.println("    Processing " + i + "th data row of " + content.length + " rows.");
+                            Runner.LOGGER.logError("    Processing " + i + "th data row of " + content.length + " rows.");
                         } else {
-                            System.out.println("    Processing " + i + "st data row of " + content.length + " rows.");
+                            Runner.LOGGER.logError("    Processing " + i + "st data row of " + content.length + " rows.");
                         }
                     }
 
@@ -114,8 +114,7 @@ public class ErrorReportsConverter {
             }
             
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Runner.LOGGER.logException("Could not read Excel WB: " + srcFile.getAbsolutePath(), e);
         }
     }
 
@@ -134,7 +133,7 @@ public class ErrorReportsConverter {
                 metricsColumn = column;
                 int nMetrics = row.length - column;
                 metricsNames = new String[nMetrics];
-                System.out.println("  Header lists " + nMetrics + " metrics.");
+                Runner.LOGGER.logError("  Header lists " + nMetrics + " metrics.");
                 
                 // Now, it is the index within the array
                 column = 0;
@@ -146,8 +145,7 @@ public class ErrorReportsConverter {
                     try {
                         metrics.addBatch(headerElem);
                     } catch (SQLException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        Runner.LOGGER.logException("Could not commit batch", e);
                     }
                 }
             }
@@ -157,15 +155,14 @@ public class ErrorReportsConverter {
             try {
                 metrics.executeBatch();
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Runner.LOGGER.logException("Could not execute batch", e);
             }
         }
         
         try {
             con.setAutoCommit(true);
         } catch (SQLException e2) {
-            e2.printStackTrace();
+            Runner.LOGGER.logException("Could not set SQL autocommit to " + true, e2);
         }
     }
     
@@ -176,8 +173,7 @@ public class ErrorReportsConverter {
                     con.commit();
                 }
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Runner.LOGGER.logException("Could not commit remaining data", e);
             }
             
             try {

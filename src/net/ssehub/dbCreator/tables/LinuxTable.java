@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 
+import net.ssehub.dbCreator.Runner;
+
 public class LinuxTable {
     private PreparedStatement insertLinux;
     private PreparedStatement getLinux;
@@ -34,7 +36,7 @@ public class LinuxTable {
             
             // Retrieve result
             if (affectedRows == 0) {
-                System.err.println("Could not add Linux version: " + version);
+                Runner.LOGGER.logError("Could not add Linux version: " + version);
             } else {
                 try (ResultSet generatedKeys = insertLinux.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -62,7 +64,7 @@ public class LinuxTable {
                 insertLinux.close();
                 getLinux.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                Runner.LOGGER.logException("Could not close SQL connection", e);
             }
             con =  null;
         }
