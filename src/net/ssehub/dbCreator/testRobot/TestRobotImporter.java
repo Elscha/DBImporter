@@ -2,6 +2,7 @@ package net.ssehub.dbCreator.testRobot;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -13,6 +14,13 @@ public class TestRobotImporter {
     public static final int MAX_THREADS = 8;
 
     public static void main(String[] args) throws IOException, SQLException {
+        Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler () {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                Runner.LOGGER.logException("Uncaught exception in thread " + t.getName(), e);
+            }            
+        });
+        
         long time = System.currentTimeMillis();
         
         File[] reports = ERROR_REPORTS_FOLDER.listFiles();
@@ -29,6 +37,13 @@ public class TestRobotImporter {
             final int fileID = i;
             
             executor.submit(() -> {
+                String fileName = reports[fileID].getName();
+                int pos = fileName.lastIndexOf('.');
+                if (pos >= 0) {
+                    fileName = fileName.substring(0, pos);
+                }
+                String thName = fileName + " (" + fileID +"/" +reports.length + ")";
+                Thread.currentThread().setName(thName);
                 Runner.LOGGER.logInfo("Processing " + fileID + " of " + reports.length + ": " + reports[fileID].getName());
                 try {
                     ErrorReportsConverter converter = new ErrorReportsConverter(false);
