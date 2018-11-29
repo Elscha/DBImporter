@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,8 +108,6 @@ public class ErrorReportsConverter {
                 }
             } catch (SQLException e) {
                 Runner.LOGGER.logException("Could not send SQL data", e);
-            } catch (ParseException e) {
-                Runner.LOGGER.logException("Could not parse date", e);
             }
             
         } catch (IOException e) {

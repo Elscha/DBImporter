@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
+import java.sql.Timestamp;
 
 import net.ssehub.dbCreator.DBUtils;
 import net.ssehub.dbCreator.Runner;
@@ -24,10 +24,11 @@ public class BugTable {
     }
     
     public Integer add(String date, String repo, String commit, String serverity, String lineNo, String source,
-        String path, String function) throws SQLException, ParseException {
+        String path, String function) throws SQLException {
         
         // Prepare
-        insertFunction.setObject(1, DBUtils.toDate(date));
+        Timestamp timestamp = DBUtils.toDate(date);
+        insertFunction.setTimestamp(1, timestamp);
         insertFunction.setString(2, repo);
         
         // max commit length is set to 40 chars. However, some commits contain branches and, thus are longer

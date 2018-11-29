@@ -45,7 +45,7 @@ public class TestRobotImporter {
                 if (pos >= 0) {
                     fileName = fileName.substring(0, pos);
                 }
-                String thName = fileName + " (" + fileID +"/" +reports.length + ")";
+                String thName = fileName + " (" + (fileID + 1) +"/" +reports.length + ")";
                 Thread.currentThread().setName(thName);
                 Runner.LOGGER.logInfo("Processing " + fileID + " of " + reports.length + ": " + reports[fileID].getName());
                 try {

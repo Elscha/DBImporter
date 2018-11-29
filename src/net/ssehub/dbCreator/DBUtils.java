@@ -54,10 +54,16 @@ public class DBUtils {
         
         Timestamp result = null;
         try {
-            java.util.Date d = DATE_FORMAT.parse(date);;
-            result = new Timestamp(d.getTime());            
+            java.util.Date d = DATE_FORMAT.parse(date);
+            result = new Timestamp(d.getTime());
+            
+            if (result.getYear() > 2100) {
+                Runner.LOGGER.logWarning("Invalid timestamp. Converted " + date + " into " + result);
+                result = null;
+            }
         } catch (ParseException e) {
             // No action needed, if not parseable, we commit nothing (is allowed by DB)
+            Runner.LOGGER.logWarning("Invalid timestamp. Could not parse " + date);
         }
         
         return result;
